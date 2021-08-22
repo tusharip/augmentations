@@ -4,10 +4,7 @@ This repo contains, augmentations related to
 ## Vsion
 ## Text 
 ## Audio
-sjjsjbb  b
-hgahsgas
 
-ahhahah
 
 
 
