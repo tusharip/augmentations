@@ -18,10 +18,6 @@ def save(path, img):
     img = img.permute(1,2,0).numpy()
     cv2.imwrite(path, img)
 
-
-
-
-
 class vertical_flip(nn.Module):
     def __init__(self,):
         super().__init__()
@@ -35,7 +31,6 @@ class horizontal_flip(nn.Module):
 
     def forward(self, img):
         return torch.flip(img, [-1])
-
 
 
 class colorjitter(nn.Module):
@@ -70,13 +65,6 @@ def saturation(img, saturation):
     grey = grey.unsqueeze(dim=-3)
 
     return (saturation*img + (1-saturation) * grey).clamp(0,1)
-
-
- 
-
-
-
-
 
 if __name__=="__main__":
     path = "../data/cat.jpg"
