@@ -1,6 +1,7 @@
 import cv2
 import torch
 import torch.nn as nn
+import numpy as np
 
 def read_image(path):
     img = cv2.imread(path)
@@ -80,12 +81,36 @@ class cutout(nn.Module):
             img[:,x:x+box_size, y:y+box_size]=self.fill_value
         return img
 
+def mixup(images, labels, alpha=1.0):
+    indices = torch.randperm(len(images))
+    shuff_imgs =images[indices]
+    shuff_labels =labels[indices]
+
+    lam = np.clip(np.random.beta(alpha, alpha), 0.4, 0.6)
+    print(lam)
+
+    mix_imgs = lam*images + (1-lam)*shuff_imgs
+    mix_labels = lam*labels + (1-lam)*shuff_labels
+
+    return mix_imgs, mix_labels
+
+
+
 if __name__=="__main__":
     path = "../data/cat.jpg"
     save_path = "../outputs/vision/"
 
     img = read_image(path)
-    show("image", img)
+    img1 = read_image("../data/butterfly.jpg")
+    data = torch.stack((img, img1), 0)
+    labels = torch.tensor([[1,0],[0,1]])
+    print(data.shape, labels.shape)
+
+    data, x = mixup(data, labels)
+    a    = torch.cat((img, data[1]),2)
+    show("brightness", a)
+    print(x)
+    # show("image", img)
 
     ##############  vertical flip ######################
     # a    = vertical_flip()
@@ -112,7 +137,7 @@ if __name__=="__main__":
 
     a    = cutout(fill_value=0, no_holes=30, min_cut_size=100, max_cut_size=100)
     a    = a(img)
-    
+
     a    = torch.cat((img, a),2)
     show("brightness", a)
     path = save_path+"brightness"+".png"
