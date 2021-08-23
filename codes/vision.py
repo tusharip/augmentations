@@ -58,13 +58,27 @@ def contrast(img, contrast):
 
     return (contrast*img + (1-contrast) * mean).clamp(0,1)
 
-
 def saturation(img, saturation):
     r, g, b = img.unbind(dim=-3)
     grey = 0.2989 * r + 0.587 * g + 0.114 * b
     grey = grey.unsqueeze(dim=-3)
 
     return (saturation*img + (1-saturation) * grey).clamp(0,1)
+
+class cutout(nn.Module):
+    def __init__(self, fill_value=0, no_holes=1, min_cut_size=100, max_cut_size=100,):
+        super().__init__()
+        self.fill_value = fill_value
+        self.no_holes   = no_holes
+        self.min_cut_size = min_cut_size
+        self.max_cut_size = max_cut_size
+
+    def forward(self, img):
+        for _ in range(self.no_holes):
+            box_size = torch.randint(self.min_cut_size, self.max_cut_size+1, (1,))
+            x,y      = torch.randint(0,int(img.shape[1]-box_size+1), size=(1,)), torch.randint(0,int(img.shape[2]-box_size+1), size=(1,))
+            img[:,x:x+box_size, y:y+box_size]=self.fill_value
+        return img
 
 if __name__=="__main__":
     path = "../data/cat.jpg"
@@ -89,11 +103,19 @@ if __name__=="__main__":
     # save(path, a)
 
 ###############  brightness flip ######################
-    a    = colorjitter(brightness=2, contrast=2, saturation=2)
+    # a    = colorjitter(brightness=2, contrast=2, saturation=2)
+    # a    = a(img)
+    # path = save_path+"brightness"+".png"
+    # a    = torch.cat((img, a),2)
+    # show("brightness", a)
+    # save(path, a)
+
+    a    = cutout(fill_value=0, no_holes=30, min_cut_size=100, max_cut_size=100)
     a    = a(img)
-    path = save_path+"brightness"+".png"
+    
     a    = torch.cat((img, a),2)
     show("brightness", a)
-    save(path, a)
+    path = save_path+"brightness"+".png"
+    # save(path, a)
 
     pass
