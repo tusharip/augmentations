@@ -77,7 +77,7 @@ class cutout(nn.Module):
     def forward(self, img):
         for _ in range(self.no_holes):
             box_size = torch.randint(self.min_cut_size, self.max_cut_size+1, (1,))
-            x,y      = torch.randint(0,int(img.shape[1]-box_size+1), size=(1,)), torch.randint(0,int(img.shape[2]-box_size+1), size=(1,))
+            x,y      = torch.randint(0,int(img.shape[-2]-box_size+1), size=(1,)), torch.randint(0,int(img.shape[-1]-box_size+1), size=(1,))
             img[:,x:x+box_size, y:y+box_size]=self.fill_value
         return img
 
@@ -94,9 +94,35 @@ def mixup(images, labels, alpha=1.0):
 
     return mix_imgs, mix_labels
 
+class cutmix(nn.Module):
+    def __init__(self, min_cut_size=100, max_cut_size=100, batch_prob=0.1):
+        super().__init__()
+        self.min_cut_size = min_cut_size
+        self.max_cut_size = max_cut_size
+        self.batch_prob   = batch_prob
+
+    def forward(self, images, labels):
+        indices = torch.randperm(len(images))
+        shuff_imgs =images[indices]
+        shuff_labels =labels[indices]
+        result_images, result_labels= [], []
+        for src_img, src_trg, src_lab, tar_lab in zip(images, shuff_imgs, labels, shuff_labels):
+            if torch.rand(1)>self.batch_prob:
+                box_size = torch.randint(self.min_cut_size, self.max_cut_size+1, (1,))
+                x,y      = torch.randint(0,int(img.shape[-2]-box_size+1), size=(1,)), torch.randint(0,int(img.shape[-1]-box_size+1), size=(1,))
+                src_img[:, x:x+box_size, y:y+box_size]= src_trg[: , x:x+box_size, y:y+box_size]
+                lam = (1-(box_size**2/(src_img.shape[-2]*src_img.shape[-1])))
+                lab =lam*src_lab + (1. - lam)*tar_lab
+                result_images.append(src_img)
+                result_labels.append(lab)
+        print(result_labels)
+        return torch.stack(result_images), torch.stack(result_labels)
+
 
 
 if __name__=="__main__":
+
+
     path = "../data/cat.jpg"
     save_path = "../outputs/vision/"
 
@@ -104,7 +130,17 @@ if __name__=="__main__":
     img1 = read_image("../data/butterfly.jpg")
     data = torch.stack((img, img1), 0)
     labels = torch.tensor([[1,0],[0,1]])
-    print(data.shape, labels.shape)
+    print("data shaep",data.shape, labels.shape)
+
+    a=cutmix(min_cut_size=200, max_cut_size=200, batch_prob=0.1)
+    x, y=a(data, labels)
+    print(x.shape, y.shape)
+    a    = torch.cat((img, x[0]),2)
+    show("brightness", a)
+
+
+
+    exit()
 
     data, x = mixup(data, labels)
     a    = torch.cat((img, data[1]),2)
