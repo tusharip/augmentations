@@ -19,13 +19,14 @@ class Custom_dataset(Dataset):
                         T.Resize(self.size),
                         T.CenterCrop(500),
                         # T.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0),
-                        # T.Grayscale(num_output_channels=3),
+                        T.RandomApply([T.Grayscale(num_output_channels=3),
+                                        T.RandomPerspective(distortion_scale=0.6, p=1.0),
+                                        ],p=0.3),
                         # T.Pad(padding=100, fill=0, padding_mode='constant'),
-                        T.RandomResizedCrop(size=self.size),
+                        T.RandomResizedCrop(size=self.size, scale=(0.08, 1.0) ),
                         T.RandomHorizontalFlip(p=0.3),
                         T.RandomVerticalFlip(p=0.3),
                         T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
-                        # T.RandomPerspective(distortion_scale=0.6, p=1.0),
                         T.RandomRotation(degrees=(0, 180)),
                         T.Normalize(mean=[0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
                                 ])
@@ -47,6 +48,6 @@ class Custom_dataset(Dataset):
 if __name__ == "__main__":
     dataset = Custom_dataset("../data")
     print(len(dataset))
-    show("hii", dataset[0])
+    show("hii", dataset[1])
    
 

@@ -9,7 +9,7 @@ def read_image(path):
     return torch.from_numpy(img).permute(2,0,1)/255
 
 def show(name, img ):
-    img = img.permute(1,2,0).numpy()[::-1]
+    img = img.permute(1,2,0).numpy()[..., ::-1]
 
     cv2.imshow(name, img)
     cv2.waitKey(0)
