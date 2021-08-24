@@ -13,19 +13,21 @@ class Custom_dataset(Dataset):
     def __init__(self, dir_path):
         super().__init__()
         self.all_paths = glob.glob(dir_path+"/*.jpg")
+        self.size      = [500, 500]
         self.transforms = T.Compose([
                         T.ToTensor(),
-                        # T.CenterCrop(10),
+                        T.Resize(self.size),
+                        T.CenterCrop(500),
                         # T.ColorJitter(brightness=0, contrast=0, saturation=0, hue=0),
                         # T.Grayscale(num_output_channels=3),
                         # T.Pad(padding=100, fill=0, padding_mode='constant'),
-                        T.RandomResizedCrop(size=(256, 256)),
+                        T.RandomResizedCrop(size=self.size),
                         T.RandomHorizontalFlip(p=0.3),
                         T.RandomVerticalFlip(p=0.3),
                         T.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
                         # T.RandomPerspective(distortion_scale=0.6, p=1.0),
                         T.RandomRotation(degrees=(0, 180)),
-                        # T.Normalize(mean=[0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
+                        T.Normalize(mean=[0.5, 0.5, 0.5], std = [0.5, 0.5, 0.5])
                                 ])
 
     def __len__(self, ):
@@ -37,6 +39,7 @@ class Custom_dataset(Dataset):
         print(img.shape)
         if self.transforms:
             img = self.transforms(img)
+        print(img.shape)
         return img
 
 
