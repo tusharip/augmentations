@@ -11,7 +11,7 @@ Important augmentations related vision
 ***
 ### *Color jitter*
 
-    ColorJitter is a type of image data augmentation where we randomly change the brightness, contrast and saturation of an image.
+ ColorJitter is a type of image data augmentation where we randomly change the brightness, contrast and saturation of an image.
 
 1. **Brightness** : refers to the overall lightness or darkness of the image
     <p align="center"
@@ -23,22 +23,21 @@ Important augmentations related vision
     <p align="center"
     <br>
     <br>
-    <img src="./outputs/vision/CONTRAST.jpg" width="300" height ="150">
+    <img src="./outputs/vision/contrast.jpg" width="300" height ="150">
     </p>
 3. **Saturation** : refers to  the intensity and purity of a color as displayed in an image. The higher the saturation of a color, the more vivid and intense it is. The lower a color's saturation, the closer it is to pure gray on the grayscale
     <p align="center"
     <br>
     <br>
-    <img src="./outputs/vision/Saturation.jpg" width="300" height ="150">
-    </p>
-
+    <img src="./outputs/vision/saturation.jpg" width="300" height ="150">
+    </p
 ***
 ### [*CutOut*]()    
-    Cutout augmentation is a kind of regional dropout strategy in which a random patch from an image is zeroed out (replaced with black pixels). Cutout samples suffer from the decrease in information and regularization capability.
+ Cutout augmentation is a kind of regional dropout strategy in which a random patch from an image is zeroed out (replaced with black pixels). Cutout samples suffer from the decrease in information and regularization capability.
 ### [*Mixup*](https://arxiv.org/pdf/1710.09412.pdf)
-    In Mixup augmentation two samples are mixed together by linear interpolation of their images and labels. Mixup samples suffer from unrealistic output and ambiguity among the labels and hence cannot perform well on tasks like image localization and object detection.
+In Mixup augmentation two samples are mixed together by linear interpolation of their images and labels. Mixup samples suffer from unrealistic output and ambiguity among the labels and hence cannot perform well on tasks like image localization and object detection.
 ### [*CutMix*](https://github.com/clovaai/CutMix-PyTorch)
-    In CutMix augmentation we cut and paste random patches between the training images. The ground truth labels are mixed in proportion to the area of patches in the images. CutMix increases localization ability by making the model to focus on less discriminative parts of the object being classified and hence is also well suited for tasks like object detection.
+In CutMix augmentation we cut and paste random patches between the training images. The ground truth labels are mixed in proportion to the area of patches in the images. CutMix increases localization ability by making the model to focus on less discriminative parts of the object being classified and hence is also well suited for tasks like object detection.
 
 <p align="center"
     <br>
