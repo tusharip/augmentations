@@ -1,7 +1,6 @@
 import cv2
 import torch
 from torch.utils.data import Dataset, DataLoader
-import torch.nn as nn
 import torchvision.transforms as T
 import numpy as np
 import os
@@ -36,11 +35,8 @@ class Custom_dataset(Dataset):
 
     def __getitem__(self, ind):
         img = cv2.imread(self.all_paths[ind])[..., ::-1 ].copy()
-
-        print(img.shape)
         if self.transforms:
             img = self.transforms(img)
-        print(img.shape)
         return img
 
 
@@ -49,5 +45,5 @@ if __name__ == "__main__":
     dataset = Custom_dataset("../data")
     print(len(dataset))
     show("hii", dataset[1])
-   
+
 
