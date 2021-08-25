@@ -4,6 +4,9 @@ import torch.nn as nn
 import numpy as np
 
 def read_image(path):
+    '''
+    reads image converts to PIL format
+    '''
     img = cv2.imread(path)
     img = cv2.resize(img, (500,500))
     return torch.from_numpy(img).permute(2,0,1)/255
@@ -42,9 +45,10 @@ class colorjitter(nn.Module):
         self.saturation = saturation
 
     def forward(self, img):
-        # a= brightness(img,self.brightness)
-        a = saturation(img, self.saturation)
-        return a
+        img = brightness(img,self.brightness)
+        img = contrast(img, self.contrast)
+        img = saturation(img, self.saturation)
+        return img
 
 def brightness(img, brightness):
     _range =[max(0, 1-brightness), 1+brightness]
@@ -87,8 +91,6 @@ def mixup(images, labels, alpha=1.0):
     shuff_labels =labels[indices]
 
     lam = np.clip(np.random.beta(alpha, alpha), 0.4, 0.6)
-    print(lam)
-
     mix_imgs = lam*images + (1-lam)*shuff_imgs
     mix_labels = lam*labels + (1-lam)*shuff_labels
 
@@ -115,7 +117,6 @@ class cutmix(nn.Module):
                 lab =lam*src_lab + (1. - lam)*tar_lab
                 result_images.append(src_img)
                 result_labels.append(lab)
-        print(result_labels)
         return torch.stack(result_images), torch.stack(result_labels)
 
 
@@ -130,22 +131,17 @@ if __name__=="__main__":
     img1 = read_image("../data/butterfly.jpg")
     data = torch.stack((img, img1), 0)
     labels = torch.tensor([[1,0],[0,1]])
-    print("data shaep",data.shape, labels.shape)
+    print("data shape",data.shape, labels.shape)
 
     a=cutmix(min_cut_size=200, max_cut_size=200, batch_prob=0.1)
     x, y=a(data, labels)
     print(x.shape, y.shape)
     a    = torch.cat((img, x[0]),2)
-    show("brightness", a)
-
-
-
-    exit()
+    show("cutmix", a)
 
     data, x = mixup(data, labels)
     a    = torch.cat((img, data[1]),2)
-    show("brightness", a)
-    print(x)
+    show("mixup", a)
     # show("image", img)
 
     ##############  vertical flip ######################
