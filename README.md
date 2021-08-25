@@ -13,19 +13,19 @@ Augmentations : Color Jitter, Cutout, Mixup, Cutmix
 
  ColorJitter is a type of image data augmentation where we randomly change the brightness, contrast and saturation of an image.
 
-1. **Brightness** : refers to the overall lightness or darkness of the image
+1. [**Brightness**]() : refers to the overall lightness or darkness of the image
     <p align="center"
     <br>
     <br>
     <img src="./outputs/vision/brightness.jpg" width="300" height ="150">
     </p>
-2. **Contrast** : refers to the difference in luminance or colour that makes an object distinguishable
+2. [**Contrast**]() : refers to the difference in luminance or colour that makes an object distinguishable
     <p align="center"
     <br>
     <br>
     <img src="./outputs/vision/contrast.jpg" width="300" height ="150">
     </p>
-3. **Saturation** : refers to  the intensity and purity of a color as displayed in an image. The higher the saturation of a color, the more vivid and intense it is. The lower a color's saturation, the closer it is to pure gray on the grayscale
+3. [**Saturation**]() : refers to  the intensity and purity of a color as displayed in an image. The higher the saturation of a color, the more vivid and intense it is. The lower a color's saturation, the closer it is to pure gray on the grayscale
     <p align="center"
     <br>
     <br>
