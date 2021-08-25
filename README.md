@@ -34,10 +34,24 @@ Augmentations : Color Jitter, Cutout, Mixup, Cutmix
 ***
 ### [*CutOut*]()    
  Cutout augmentation is a kind of regional dropout strategy in which a random patch from an image is zeroed out (replaced with black pixels). Cutout samples suffer from the decrease in information and regularization capability.
+
+<p align="center">
+  <img width="300" height="150" src="./outputs/vision/cutout.png">
+</p>
+
 ### [*Mixup*](https://arxiv.org/pdf/1710.09412.pdf)
 In Mixup augmentation two samples are mixed together by linear interpolation of their images and labels. Mixup samples suffer from unrealistic output and ambiguity among the labels and hence cannot perform well on tasks like image localization and object detection.
+<p align="center">
+  <img width="300" height="150" src="./outputs/vision/mixup.png">
+</p>
+
 ### [*CutMix*](https://github.com/clovaai/CutMix-PyTorch)
 In CutMix augmentation we cut and paste random patches between the training images. The ground truth labels are mixed in proportion to the area of patches in the images. CutMix increases localization ability by making the model to focus on less discriminative parts of the object being classified and hence is also well suited for tasks like object detection.
+
+<p align="center">
+  <img width="300" height="150" src="./outputs/vision/cutmix.png">
+</p>
+
 
 <p align="center"
     <br>
