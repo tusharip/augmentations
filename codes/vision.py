@@ -7,19 +7,18 @@ def read_image(path):
     '''
     reads image converts to PIL format
     '''
-    img = cv2.imread(path)
+    img = cv2.imread(path)[..., ::-1]
     img = cv2.resize(img, (500,500))
     return torch.from_numpy(img).permute(2,0,1)/255
 
 def show(name, img ):
     img = img.permute(1,2,0).numpy()[..., ::-1]
-
     cv2.imshow(name, img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
 def save(path, img):
-    img = img.permute(1,2,0).numpy()
+    img = img.permute(1,2,0).numpy()[..., ::-1]*255
     cv2.imwrite(path, img)
 
 class vertical_flip(nn.Module):
@@ -85,7 +84,7 @@ class cutout(nn.Module):
             img[:,x:x+box_size, y:y+box_size]=self.fill_value
         return img
 
-def mixup(images, labels, alpha=1.0):
+def mixup(images, labels, alpha=0.5):
     indices = torch.randperm(len(images))
     shuff_imgs =images[indices]
     shuff_labels =labels[indices]
@@ -133,15 +132,6 @@ if __name__=="__main__":
     labels = torch.tensor([[1,0],[0,1]])
     print("data shape",data.shape, labels.shape)
 
-    a=cutmix(min_cut_size=200, max_cut_size=200, batch_prob=0.1)
-    x, y=a(data, labels)
-    print(x.shape, y.shape)
-    a    = torch.cat((img, x[0]),2)
-    show("cutmix", a)
-
-    data, x = mixup(data, labels)
-    a    = torch.cat((img, data[1]),2)
-    show("mixup", a)
     # show("image", img)
 
     ##############  vertical flip ######################
@@ -167,12 +157,27 @@ if __name__=="__main__":
     # show("brightness", a)
     # save(path, a)
 
-    a    = cutout(fill_value=0, no_holes=30, min_cut_size=100, max_cut_size=100)
-    a    = a(img)
-
-    a    = torch.cat((img, a),2)
-    show("brightness", a)
-    path = save_path+"brightness"+".png"
+    cut   = cutout(fill_value=0, no_holes=5, min_cut_size=100, max_cut_size=100)
+    img1  = img.clone()
+    x     = cut(img)
+    res    = torch.cat((img1, x),2)
+    show("brightness", res)
+    save(save_path+"cutout.png", res)
+    exit()
     # save(path, a)
+
+    
+    # a=cutmix(min_cut_size=200, max_cut_size=200, batch_prob=0.1)
+    # x, y=a(data, labels)
+    # print(x.shape, y.shape)
+    # a    = torch.cat((img, x[0]),2)
+    # save(save_path+"cutmix.png", a)
+    # show("cutmix", a)
+
+    data, x = mixup(data, labels)
+    a    = torch.cat((img, data[1]),2)
+    save(save_path+"mixup.png", a)
+    show("mixup", a)
+    exit()
 
     pass
