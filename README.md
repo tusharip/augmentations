@@ -6,10 +6,10 @@ Augmentations: a Technique to increase the diversity of your training set by app
 ***
 ## Vision
 ***
-Important augmentations related vision
+Augmentations : Color Jitter, Cutout, Mixup, Cutmix
 
 ***
-### *Color jitter*
+### [*Color jitter*]()
 
  ColorJitter is a type of image data augmentation where we randomly change the brightness, contrast and saturation of an image.
 
